@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Printable Food Tags (9x6cm) - 8 per page</title>
+    <title>Printable Food Tags - 10 per page</title>
     <style>
         @page { 
             size: A4; 
@@ -11,8 +11,6 @@
             margin: 0; 
             padding: 0;
             font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
             min-height: 100vh;
         }
         .controls {
@@ -22,6 +20,9 @@
             gap: 15px;
             flex-wrap: wrap;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         .control-group {
             display: flex;
@@ -29,7 +30,7 @@
             gap: 5px;
         }
         .pages-container {
-            flex: 1;
+            padding-top: 10px;
             overflow-y: auto;
         }
         .page {
@@ -37,8 +38,8 @@
             height: 297mm;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(4, 1fr);
-            gap: 5mm;
+            grid-auto-rows: 1fr;
+            gap: 3mm;
             padding: 10mm;
             box-sizing: border-box;
             background: #f9f9f9;
@@ -53,13 +54,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 3mm;
+            padding: 2mm;
             background: #F8F5F0;
             border: 2px solid #FFD700;
             box-shadow: 0 1mm 2mm rgba(0,0,0,0.05);
             border-radius: 0;
-            width: 90mm;
-            height: 60mm;
+            width: 69mm;
+            height: 44mm;
             page-break-inside: avoid;
             position: relative;
             cursor: pointer;
@@ -91,36 +92,36 @@
         }
         .logo {
             max-width: 80%;
-            max-height: 12mm;
-            margin-bottom: 2mm;
+            max-height: 10mm;
+            margin-bottom: 1mm;
             object-fit: contain;
             pointer-events: none;
             user-select: none;
         }
         .food-name {
-            font-size: 10mm;
+            font-size: 7mm;
             font-weight: bold;
             color: #222;
             text-align: center;
-            margin: 2mm 0;
+            margin: 1mm 0;
             text-transform: uppercase;
             word-break: break-word;
             width: 100%;
         }
         .food-description {
-            font-size: 5mm;
+            font-size: 4mm;
             color: #555;
             text-align: center;
             margin: 1mm 0;
             word-break: break-word;
             width: 100%;
-            max-height: 20mm;
+            max-height: 15mm;
             overflow: hidden;
             text-transform: uppercase;
         }
         .accent-bar {
             width: 70%;
-            height: 1.5mm;
+            height: 1mm;
             background: #FFD700;
             margin: 1mm 0;
             pointer-events: none;
@@ -194,23 +195,23 @@
     <div class="controls">
         <div class="control-group">
             <label>Tag Width:</label>
-            <input type="range" id="width-control" min="50" max="120" value="90">
-            <span class="size-display" id="width-display">90mm</span>
+            <input type="range" id="width-control" min="50" max="120" value="69">
+            <span class="size-display" id="width-display">69mm</span>
         </div>
         <div class="control-group">
             <label>Tag Height:</label>
-            <input type="range" id="height-control" min="40" max="100" value="60">
-            <span class="size-display" id="height-display">60mm</span>
+            <input type="range" id="height-control" min="40" max="100" value="44">
+            <span class="size-display" id="height-display">44mm</span>
         </div>
         <div class="control-group">
             <label>Name Font Size:</label>
-            <input type="range" id="font-control" min="3" max="15" value="10">
-            <span class="size-display" id="font-display">10mm</span>
+            <input type="range" id="font-control" min="3" max="15" value="7">
+            <span class="size-display" id="font-display">7mm</span>
         </div>
         <div class="control-group">
             <label>Desc Font Size:</label>
-            <input type="range" id="desc-font-control" min="2" max="10" value="5">
-            <span class="size-display" id="desc-font-display">5mm</span>
+            <input type="range" id="desc-font-control" min="2" max="10" value="4">
+            <span class="size-display" id="desc-font-display">4mm</span>
         </div>
         <button onclick="resetSizes()">Reset Sizes</button>
         <button onclick="addNewPage()" style="cursor: pointer;">Add Page</button>
@@ -242,7 +243,7 @@
 
         // Default text constants
         const DEFAULT_FOOD_NAME = "NEW ITEM";
-        const DEFAULT_DESCRIPTION = "DESCRIPTION"; // Changed to just "DESCRIPTION"
+        const DEFAULT_DESCRIPTION = "DESCRIPTION";
 
         // Template for a new tag
         const tagTemplate = `
@@ -255,10 +256,10 @@
             </div>
         `;
 
-        // Template for a new page
+        // Template for a new page (10 tags - 5 per column)
         const pageTemplate = `
             <div class="page">
-                ${tagTemplate.repeat(8)}
+                ${tagTemplate.repeat(10)}
             </div>
         `;
 
@@ -310,10 +311,10 @@
         }
 
         function resetSizes() {
-            widthControl.value = 90;
-            heightControl.value = 60;
-            fontControl.value = 10;
-            descFontControl.value = 5;
+            widthControl.value = 69;
+            heightControl.value = 44;
+            fontControl.value = 7;
+            descFontControl.value = 4;
             updateSizes();
             updateFontSizes();
             updateDescFontSizes();
@@ -363,29 +364,25 @@
         function setupClearOnFocus() {
             // Set up clear-on-focus for food names
             document.querySelectorAll('.food-name').forEach(name => {
-                name.addEventListener('focus', function() {
-                    if (this.textContent === DEFAULT_FOOD_NAME) {
-                        this.textContent = '';
-                    }
-                });
-                name.addEventListener('blur', function() {
-                    if (this.textContent.trim() === '') {
-                        this.textContent = DEFAULT_FOOD_NAME;
-                    }
+                name.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const range = document.createRange();
+                    range.selectNodeContents(this);
+                    const sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
                 });
             });
 
             // Set up clear-on-focus for descriptions
             document.querySelectorAll('.food-description').forEach(desc => {
-                desc.addEventListener('focus', function() {
-                    if (this.textContent === DEFAULT_DESCRIPTION) {
-                        this.textContent = '';
-                    }
-                });
-                desc.addEventListener('blur', function() {
-                    if (this.textContent.trim() === '') {
-                        this.textContent = DEFAULT_DESCRIPTION;
-                    }
+                desc.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const range = document.createRange();
+                    range.selectNodeContents(this);
+                    const sel = window.getSelection();
+                    sel.removeAllRanges();
+                    sel.addRange(range);
                 });
             });
         }
@@ -400,12 +397,12 @@
                 tagsInPage.forEach(tag => tag.remove());
             });
             
-            // Redistribute tags evenly across pages
+            // Redistribute tags evenly across pages (10 per page)
             let currentPageIndex = 0;
             let tagsInCurrentPage = 0;
             
             allTags.forEach((tag, index) => {
-                if (tagsInCurrentPage >= 8) {
+                if (tagsInCurrentPage >= 10) {
                     currentPageIndex++;
                     tagsInCurrentPage = 0;
                     
@@ -485,10 +482,10 @@
                     pagesContainer.innerHTML = '';
                     
                     // Apply settings
-                    widthControl.value = data.width || 90;
-                    heightControl.value = data.height || 60;
-                    fontControl.value = data.fontSize || 10;
-                    descFontControl.value = data.descFontSize || 5;
+                    widthControl.value = data.width || 69;
+                    heightControl.value = data.height || 44;
+                    fontControl.value = data.fontSize || 7;
+                    descFontControl.value = data.descFontSize || 4;
                     updateSizes();
                     updateFontSizes();
                     updateDescFontSizes();
